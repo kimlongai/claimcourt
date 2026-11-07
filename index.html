@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ClaimCourt — an on-chain court for airdrop &amp; token-claim announcements</title>
+<meta name="description" content="ClaimCourt is a GenLayer Intelligent Contract that adjudicates airdrop and token-claim announcements. AI validators fetch the page, judge the claim, and store the verdict on-chain.">
+<style>
+  :root{
+    --bg:#0b0a14; --panel:#151327; --panel2:#1b1833; --line:#2b2750;
+    --text:#eceaf6; --muted:#a49ec4; --accent:#8b7bff; --accent2:#b7aaff;
+    --green:#3ddc97; --red:#ff6b81; --amber:#ffc857; --grey:#9aa0b4;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+  a{color:var(--accent2)}
+  .wrap{max-width:880px;margin:0 auto;padding:0 20px 64px}
+  header{padding:56px 0 8px;text-align:center}
+  .badge{display:inline-block;border:1px solid var(--line);background:var(--panel);color:var(--muted);border-radius:999px;padding:4px 14px;font-size:13px;letter-spacing:.04em}
+  h1{font-size:44px;margin:18px 0 6px;letter-spacing:-.01em}
+  h1 .grad{background:linear-gradient(90deg,var(--accent),#c9bfff);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .tagline{font-size:19px;color:var(--muted);max-width:640px;margin:0 auto}
+  .cta{margin:26px 0 6px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+  .btn{display:inline-block;padding:11px 22px;border-radius:10px;text-decoration:none;font-weight:600;font-size:15px}
+  .btn.primary{background:var(--accent);color:#fff}
+  .btn.ghost{border:1px solid var(--line);color:var(--text);background:var(--panel)}
+  section{margin-top:44px}
+  h2{font-size:24px;margin:0 0 14px}
+  p{color:#d8d5ea}
+  .muted{color:var(--muted)}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px}
+  .card .v{font-weight:800;font-size:17px;letter-spacing:.03em}
+  .card p{margin:6px 0 0;font-size:14px;color:var(--muted)}
+  .verified{color:var(--green)} .notfound{color:var(--grey)} .suspicious{color:var(--red)} .unreachable{color:var(--amber)}
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px}
+  code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13.5px;background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:1px 6px;word-break:break-all}
+  table{width:100%;border-collapse:collapse;font-size:14.5px}
+  th,td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:var(--muted);font-weight:600}
+  ol.steps{padding-left:20px}
+  ol.steps li{margin:8px 0;color:#d8d5ea}
+  footer{margin-top:56px;text-align:center;color:var(--muted);font-size:13.5px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <span class="badge">BUILT ON GENLAYER · INTELLIGENT CONTRACTS · OPTIMISTIC DEMOCRACY</span>
+    <h1>Claim<span class="grad">Court</span></h1>
+    <p class="tagline">An on-chain court for airdrop &amp; token-claim announcements. GenLayer's AI validators fetch the page, judge the claim, and store the verdict on-chain — where anyone can check it.</p>
+    <div class="cta">
+      <a class="btn primary" href="https://github.com/kimlongai/claimcourt">View the code on GitHub</a>
+      <a class="btn ghost" href="https://studio.genlayer.com">Try it in GenLayer Studio</a>
+    </div>
+  </header>
+
+  <section>
+    <h2>The problem</h2>
+    <p>Airdrop farmers are spammed daily with fake claim announcements — <em>"$GEN claims are live, connect your wallet!"</em> — most of them phishing pages. Until now there was no neutral, on-chain way to ask: <strong>does this page actually say what the post claims it says, and does it show scam red flags?</strong></p>
+  </section>
+
+  <section>
+    <h2>Four possible verdicts</h2>
+    <div class="cards">
+      <div class="card"><div class="v verified">VERIFIED</div><p>The page really makes this claim and shows no serious red flags.</p></div>
+      <div class="card"><div class="v notfound">NOT_FOUND</div><p>The page loads, but it does not make — or contradicts — the claim.</p></div>
+      <div class="card"><div class="v suspicious">SUSPICIOUS</div><p>Scam red flags: seed-phrase requests, "send to unlock", impersonation, guaranteed-profit promises.</p></div>
+      <div class="card"><div class="v unreachable">UNREACHABLE</div><p>The page could not be read or returned almost no content.</p></div>
+    </div>
+    <p class="muted" style="margin-top:14px">Anyone opens a case with a page URL and the claim being circulated. The contract fetches the page itself; validators independently re-run the judgment and must agree on the <strong>verdict</strong> — consensus on the decision, not the wording. Page content is treated as untrusted data: the court never follows instructions found on the page it is judging.</p>
+  </section>
+
+  <section>
+    <h2>Live deployment</h2>
+    <div class="panel">
+      <p style="margin-top:0">Network: <strong>GenLayer Studio network</strong> (full consensus)<br>
+      Contract: <code>0x5F06335a32a921e98482f7217b4d0B4B0d7A98E2</code><br>
+      Deploy tx: <code>0x978cd483646bc3dfe06683b04a59c1d677cc572ea9b0fc2817c64c187ee8d88</code></p>
+      <table>
+        <tr><th>Case</th><th>Page</th><th>Claim</th><th>Verdict</th></tr>
+        <tr>
+          <td>case-1</td><td>testnet-faucet.genlayer.foundation</td>
+          <td>"lets visitors claim 100 GEN testnet tokens, once per week"</td>
+          <td><strong class="verified">VERIFIED</strong><br><span class="muted">The jury's summary even noted the 0.01 ETH mainnet requirement. Tx <code>0x04494f6b…fe009053</code></span></td>
+        </tr>
+        <tr>
+          <td>case-2</td><td>genlayer.com</td>
+          <td>"GEN token claims are live now and anyone can claim GEN on this page"</td>
+          <td><strong class="notfound">NOT_FOUND</strong><br><span class="muted">The homepage describes the adjudication protocol; no claim or airdrop function exists there. Tx <code>0x3f991d07…e911f8</code></span></td>
+        </tr>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>Try it yourself (free, ~3 minutes)</h2>
+    <ol class="steps">
+      <li>Open the <a href="https://github.com/kimlongai/claimcourt">GitHub repository</a> and copy <code>contracts/claim_court.py</code>.</li>
+      <li>In <a href="https://studio.genlayer.com">GenLayer Studio</a>, create a contract file, paste the code, and deploy via <strong>Run and Debug</strong> (Normal / Full Consensus). Studio-network deployment is free — no faucet needed.</li>
+      <li>Call <code>submit_case</code> with url <code>https://testnet-faucet.genlayer.foundation/</code> and claim <code>This page lets visitors claim 100 GEN testnet tokens, once per week</code>. Wait for consensus to finalize.</li>
+      <li>Call <code>get_case</code> with <code>case-1</code> — the court returns its verdict, a summary, and any red flags, all stored on-chain.</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>Roadmap</h2>
+    <p>A simple web frontend for submitting cases and browsing verdicts · deployment to Testnet Bradbury once testnet GEN is available · a public "wall of verdicts" for the farmer community.</p>
+  </section>
+
+  <footer>
+    ClaimCourt — built by <a href="https://x.com/kimlongai">@kimlongai</a>, an airdrop farmer who got tired of fake claims. · <a href="https://github.com/kimlongai/claimcourt">GitHub</a> · Powered by <a href="https://genlayer.com">GenLayer</a>
+  </footer>
+</div>
+</body>
+</html>
